@@ -2,11 +2,16 @@
 
 namespace Hootlex\Friendships\Traits;
 
+use Hootlex\Friendships\Events\FriendshipAccepted;
+use Hootlex\Friendships\Events\FriendshipBlocked;
+use Hootlex\Friendships\Events\FriendshipDenied;
+use Hootlex\Friendships\Events\FriendshipCancelled;
+use Hootlex\Friendships\Events\FriendshipSent;
+use Hootlex\Friendships\Events\FriendshipUnblocked;
 use Hootlex\Friendships\Models\Friendship;
 use Hootlex\Friendships\Models\FriendFriendshipGroups;
 use Hootlex\Friendships\Status;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Event;
 
 /**
  * Class Friendable
@@ -32,7 +37,7 @@ trait Friendable
 
         $this->friends()->save($friendship);
       
-        Event::fire('friendships.sent', [$this, $recipient]);
+        event(new FriendshipSent($this, $recipient));
 
         return $friendship;
 
@@ -47,7 +52,7 @@ trait Friendable
     {
         $deleted = $this->findFriendship($recipient)->delete();
 
-        Event::fire('friendships.cancelled', [$this, $recipient]);
+        event(new FriendshipCancelled($this, $recipient));
 
         return $deleted;
     }
@@ -93,7 +98,7 @@ trait Friendable
             'status' => Status::ACCEPTED,
         ]);
 
-        Event::fire('friendships.accepted', [$this, $recipient]);
+        event(new FriendshipAccepted($this,  $recipient));
       
         return $updated;
     }
@@ -109,7 +114,7 @@ trait Friendable
             'status' => Status::DENIED,
         ]);
 
-        Event::fire('friendships.denied', [$this, $recipient]);
+        event(new FriendshipDenied($this,  $recipient));
       
         return $updated;
     }
@@ -191,7 +196,7 @@ trait Friendable
       
         $this->friends()->save($friendship);
 
-        Event::fire('friendships.blocked', [$this, $recipient]);
+        event(new FriendshipBlocked($this,  $recipient));
 
         return $friendship;
     }
@@ -205,7 +210,7 @@ trait Friendable
     {
         $deleted = $this->findFriendship($recipient)->whereSender($this)->delete();
 
-        Event::fire('friendships.unblocked', [$this, $recipient]);
+        event(new FriendshipUnblocked($this,  $recipient));
       
         return $deleted;
     }
@@ -213,7 +218,7 @@ trait Friendable
     /**
      * @param Model $recipient
      *
-     * @return \Hootlex\Friendships\Models\Friendship
+     * @return Friendship|\Illuminate\Database\Eloquent\Builder|Model|object
      */
     public function getFriendship(Model $recipient)
     {

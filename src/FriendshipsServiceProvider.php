@@ -30,6 +30,15 @@ class FriendshipsServiceProvider extends ServiceProvider
             __DIR__ . '/config/friendships.php' => config_path('friendships.php'),
         ], 'config');
 
+        $this->publishes([
+            __DIR__ . "Events/FriendshipAccepted.php"  => base_path() . "app/Events/FriendshipAccepted.php",
+            __DIR__ . "Events/FriendshipBlocked.php"   => base_path() . "app/Events/FriendshipBlocked.php",
+            __DIR__ . "Events/FriendshipCancelled.php" => base_path() . "app/Events/FriendshipCancelled.php",
+            __DIR__ . "Events/FriendshipDenied.php"    => base_path() . "app/Events/FriendshipDenied.php",
+            __DIR__ . "Events/FriendshipSent.php"      => base_path() . "app/Events/FriendshipSent.php",
+            __DIR__ . "Events/FriendshipUnblocked.php" => base_path() . "app/Events/FriendshipUnblocked.php",
+        ], 'events');
+
     }
 
     /**
