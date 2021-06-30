@@ -24,11 +24,11 @@ class FriendshipsServiceProvider extends ServiceProvider
         $this->publishes([
             $stub . 'create_friendships_table.php'        => $target . date('Y_m_d_His', time()) . '_create_friendships_table.php',
             $stub . 'create_friendships_groups_table.php' => $target . date('Y_m_d_His', time() + 1) . '_create_friendships_groups_table.php'
-        ], 'migrations');
+        ], 'laravel-friendship:migrations');
 
         $this->publishes([
             __DIR__ . '/config/friendships.php' => config_path('friendships.php'),
-        ], 'config');
+        ], 'laravel-friendship:config');
 
         $this->publishes([
             __DIR__ . "/Events/FriendshipAccepted.php"  => base_path() . "app/Events/FriendshipAccepted.php",
@@ -37,7 +37,7 @@ class FriendshipsServiceProvider extends ServiceProvider
             __DIR__ . "/Events/FriendshipDenied.php"    => base_path() . "app/Events/FriendshipDenied.php",
             __DIR__ . "/Events/FriendshipSent.php"      => base_path() . "app/Events/FriendshipSent.php",
             __DIR__ . "/Events/FriendshipUnblocked.php" => base_path() . "app/Events/FriendshipUnblocked.php",
-        ], 'events');
+        ], 'laravel-friendship:events');
 
     }
 
